@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Maze
 {
@@ -10,6 +11,7 @@ public abstract class Bonus : MonoBehaviour,IExecute
 {
     private bool _isIntecactable;
     public Transform transform;
+    protected Color _color;
 
     public bool isIntecactable
     {
@@ -22,7 +24,7 @@ public abstract class Bonus : MonoBehaviour,IExecute
         }
     }
 
-    private void Awake()
+    protected void Awake()
     {
         transform = GetComponent<Transform>();
     }
@@ -30,11 +32,17 @@ public abstract class Bonus : MonoBehaviour,IExecute
     private void Start()
     {
         isIntecactable = true;
+        _color = Random.ColorHSV();
+
+        if (TryGetComponent(out Renderer renderer))
+        {
+            renderer.sharedMaterial.color = _color;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.attachedRigidbody)
+        if (isIntecactable||other.attachedRigidbody)
         {
             PlayerMovement playerMovement = other.attachedRigidbody.GetComponent<PlayerMovement>();
             if (playerMovement)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 
@@ -12,10 +13,14 @@ public class BadBonus : Bonus, IRotation, IFly
 {
     private float _heightFly;
     private float _speedRotation;
+
+    public event Action <string, Color> OnCaughtPlayer = delegate(string str, Color color) {  };
     
-    
-    private void Awake()
+
+
+    public void Awake()
     {
+        base.Awake();
         _heightFly = Random.Range(1f, 5f);
         _speedRotation = Random.Range(15f, 80f);
     }
@@ -39,7 +44,7 @@ public class BadBonus : Bonus, IRotation, IFly
     }
     protected override void Interaction()
     {
-        
+        OnCaughtPlayer.Invoke(gameObject.name, _color);   
     }
 }
 }
